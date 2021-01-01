@@ -1,0 +1,197 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+
+
+<head>
+<title>teste</title>
+</head>
+
+<body>
+	<h1>Sailor Search</h1>
+
+	<h:form>
+		<h:commandButton value="teste" action="#{beanDao.removeCards}"></h:commandButton>
+	</h:form>
+
+
+
+	<hr></hr>
+	<h:form id="search" name="search">
+
+		<h:inputHidden value="#{beanDao.curPage}" id="curpage"></h:inputHidden>
+		<h:inputHidden value="#{beanDao.totalResults}" id="totalresults"></h:inputHidden>
+		<h:inputHidden value="#{beanDao.totalPages}" id="totalpages"></h:inputHidden>
+		<h:messages warnStyle="color: green" infoStyle="color: blue"
+			errorStyle="color: red"></h:messages>
+		<p>
+			<h:outputLabel for="query">query:</h:outputLabel>
+			<h:inputText size="100" id="query" label="query"
+				value="#{beanDao.query}"></h:inputText>
+			<h:commandButton value="buscar" action="#{beanDao.fazerBusca}"></h:commandButton>
+		</p>
+		<p>Ex: SELECT s FROM Sailor s order by s.sname</p>
+
+	</h:form>
+
+	<p>
+		<h:dataTable id="result_table" value="#{beanDao.result}" var="s"
+			border="1" cellspacing="2"
+			rendered="#{beanDao.result!=null and beanDao.totalResults>0}">
+			<f:facet name="header">
+				<h:outputText value="Tabela" styleClass="table-header" />
+			</f:facet>
+			<h:column>
+				<f:facet name="header">
+					<h:outputText value="Name" />
+				</f:facet>
+				<h:outputText value="#{s.sname}" />
+			</h:column>
+			<h:column>
+				<f:facet name="header">
+					<h:outputText value="Rating" />
+				</f:facet>
+				<h:outputText value="#{s.rating}" />
+			</h:column>
+			<h:column>
+				<f:facet name="header">
+					<h:outputText value="Birth" />
+				</f:facet>
+				<h:outputText value="#{s.birthday}">
+
+				</h:outputText>
+			</h:column>
+			<h:column>
+				<f:facet name="header">
+					<h:outputText value="id" />
+				</f:facet>
+				<h:outputText value="#{s.id}"></h:outputText>
+
+			</h:column>
+
+			<h:column>
+				<h:dataTable id="sub_table_1" value="#{s.cards}" var="card">
+					<f:facet name="header">
+						<h:outputText value="Cards" styleClass="table-header" />
+					</f:facet>
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Tipo" />
+						</f:facet>
+						<h:outputText value="#{card.tipo}" />
+					</h:column>
+				</h:dataTable>
+			</h:column>
+
+			<h:column>
+				<h:form>
+					<h:commandLink actionListener="#{beanDao.deleteObj}"
+						title="Deletar">
+						<h:outputText value="Deletar" />
+						<f:param name="delete" value="#{s.id}" />
+					</h:commandLink>
+				</h:form>
+			</h:column>
+			<f:facet name="footer">
+				<h:panelGroup>
+					<h:outputText value="rodapé"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+		</h:dataTable>
+	</p>
+
+	<h:outputLabel value="#{beanDao.totalResults} resultado(s)"
+		rendered="#{beanDao.result!=null}"></h:outputLabel>
+	<h:outputLabel
+		value="Página #{beanDao.curPage} de #{beanDao.totalPages}"
+		rendered="#{beanDao.result!=null and beanDao.totalResults>0}"></h:outputLabel>
+
+	<h:form id="navbar"
+		rendered="#{beanDao.result!=null and beanDao.totalResults>0}">
+		<h:commandButton action="#{beanDao.prevPage}" value="anterior"></h:commandButton>
+		<h:commandButton action="#{beanDao.nextPage}" value="proximo"></h:commandButton>
+		<h:inputHidden value="#{beanDao.query}"></h:inputHidden>
+		<h:inputHidden value="#{beanDao.curPage}" id="curpage"></h:inputHidden>
+		<h:inputHidden value="#{beanDao.totalResults}" id="totalresults"></h:inputHidden>
+		<h:inputHidden value="#{beanDao.totalPages}" id="totalpages"></h:inputHidden>
+	</h:form>
+
+	<h1>Boat</h1>
+
+	<h:form id="boatFind">
+
+		<p>
+			<h:outputLabel for="idBoat">id:</h:outputLabel>
+			<h:inputText id="idBoat" label="Id do barco"
+				value="#{beanDao.idBoat}">
+
+			</h:inputText>
+			<h:message for="idBoat" showDetail="true" showSummary="false"
+				warnStyle="color: green" infoStyle="color: blue"
+				errorStyle="color: red" />
+
+			<h:commandButton action="#{beanDao.findBoat}" value="Buscar"></h:commandButton>
+
+		</p>
+
+	</h:form>
+	<hr></hr>
+	<h:form id="boat" rendered="true">
+		<!-- usando a variavel boat para manusear o objeto boat diretamente-->
+
+		<p>
+			<h:outputLabel for="id">id:</h:outputLabel>
+			<h:inputText id="id" label="Id do barco" value="#{beanDao.boat.id}">
+			</h:inputText>
+			<h:message for="id" showDetail="true" showSummary="false"
+				warnStyle="color: green" infoStyle="color: blue"
+				errorStyle="color: red" />
+
+		</p>
+
+		<p>
+			<h:outputLabel for="name">nome:</h:outputLabel>
+			<h:inputText id="name" label="Nome do barco"
+				value="#{beanDao.boat.name}">
+			</h:inputText>
+			<h:message for="name" showDetail="true" showSummary="false"
+				warnStyle="color: green" infoStyle="color: blue"
+				errorStyle="color: red" />
+
+		</p>
+
+		<p>
+			<h:outputLabel for="color">cor:</h:outputLabel>
+			<h:inputText id="color" label="cor do barco"
+				value="#{beanDao.boat.color}">
+			</h:inputText>
+			<h:message for="color" showDetail="true" showSummary="false"
+				warnStyle="color: green" infoStyle="color: blue"
+				errorStyle="color: red" />
+
+		</p>
+
+		<p>
+			<h:commandButton value="Salvar" action="#{beanDao.updateBoat}"></h:commandButton>
+
+
+			<h:commandButton value="Excluir" action="#{beanDao.removeBoat}"></h:commandButton>
+
+		</p>
+
+		<p>
+			<h:outputLabel for="btnSave">Criar novo barco: digite os valores de id, nome e cor nas caixas de texto e clique "Criar Novo"  </h:outputLabel>
+			<p></p>
+			<h:commandButton id="btnSave" value="Criar Novo"
+				action="#{beanDao.createBoat}"></h:commandButton>
+		</p>
+
+	</h:form>
+
+</body>
+</html>
